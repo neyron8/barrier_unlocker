@@ -107,13 +107,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         locationManager = getSystemService(LOCATION_SERVICE) as LocationManager?
         locationManager?.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000L, 0f, locationListener )
 
-        /*LocationServices.getFusedLocationProviderClient(this).lastLocation.addOnCompleteListener {
-            if (it.isSuccessful){
-                var task1 = "${it.result.latitude},${it.result.longitude}"
-                draw_path(task1)
-            }
-        }*/
-
     }
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {

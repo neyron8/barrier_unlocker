@@ -35,10 +35,23 @@ class RecyclerViewAdapter(val listener: RowClickListener) :
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+        holder.bind(items[position])
+
         holder.itemView.setOnClickListener {
             listener.onItemClickListener(items[position])
         }
-        holder.bind(items[position])
+
+        holder.deleteUserID.setOnClickListener {
+            listener.onDeleteUserClickListener(items[position])
+        }
+
+        holder.callUser.setOnClickListener {
+            listener.onCallUserClickListener(items[position])
+        }
+
+        holder.mapPath.setOnClickListener {
+            items[position].location?.let { it1 -> listener.onMapPathClickListener(it1) }
+        }
     }
 
     class MyViewHolder(view: View, val listener: RowClickListener) : RecyclerView.ViewHolder(view) {
@@ -52,18 +65,6 @@ class RecyclerViewAdapter(val listener: RowClickListener) :
         fun bind(data: UserEntity) {
             tvName.text = data.name
             tvPhone.text = data.phone
-
-            deleteUserID.setOnClickListener {
-                listener.onDeleteUserClickListener(data)
-            }
-
-            callUser.setOnClickListener {
-                listener.onCallUserClickListener(data)
-            }
-
-            mapPath.setOnClickListener {
-                data.location?.let { it1 -> listener.onMapPathClickListener(it1) }
-            }
         }
     }
 

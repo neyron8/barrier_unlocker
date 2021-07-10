@@ -15,7 +15,7 @@ import com.example.barrier_unlocker.db.UserEntity
 
 class MainActivityViewModel(app: Application): AndroidViewModel(app) {
 
-    lateinit var allUsers : MutableLiveData<List<UserEntity>>
+    var allUsers : MutableLiveData<List<UserEntity>>
 
     init{
         allUsers = MutableLiveData()
