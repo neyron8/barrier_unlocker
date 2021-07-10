@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
-const val REQUEST_CODE_APP_PERMISSION = 0
+const val REQUEST_CODE_APP_PERMISSION = 10
 
 
 class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener, EasyPermissions.PermissionCallbacks {
@@ -135,10 +135,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener, 
 
 
     override fun onMapPathClickListener(latlng: String) {
-        val intent = Intent(this, MapsActivity::class.java)
+        val intent = Intent(this, MapsActivity2::class.java)
         intent.putExtra("Coords", latlng)
         startActivity(intent)
     }
+
     override fun onDeleteUserClickListener(user: UserEntity) {
         viewModel.deleteUserInfo(user)
     }
