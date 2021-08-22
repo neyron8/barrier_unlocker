@@ -36,33 +36,13 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener, 
     lateinit var recyclerViewAdapter: RecyclerViewAdapter
     lateinit var viewModel: MainActivityViewModel
 
-    //////////////////////////////////////////////////////////
-    // PERMISSIONS///////////////////////////////////////////
-    private fun requestPermissions() {
-        if (TrackingPerm.hasUsefulPermissions(this)) {
-            return
-        }
-        EasyPermissions.requestPermissions(
-            this,
-            "You need to accept location permissions to use this app",
-            REQUEST_CODE_APP_PERMISSION,
-            Manifest.permission.CALL_PHONE,
-            Manifest.permission.SEND_SMS,
-            Manifest.permission.ACCESS_COARSE_LOCATION,
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.INTERNET
-        )
-    }
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-        Toast.makeText(this, "All permissions requested", Toast.LENGTH_SHORT).show()
-    }
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {}
 
     override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
             AppSettingsDialog.Builder(this).build().show()
         } else {
-            requestPermissions()
+            TrackingPerm.requestPermissions(this)
         }
     }
 
@@ -70,13 +50,11 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener, 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
-    //////////////////////////////////////////////////////////
-    /////////////////////////////////////////////////////////
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        requestPermissions()
+        TrackingPerm.requestPermissions(this)
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -98,7 +76,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener, 
             val fields = listOf(Place.Field.ADDRESS, Place.Field.NAME, Place.Field.LAT_LNG)
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
                     .build(this)
+            //Dont forget to remade this into registerForActivityResult
             startActivityForResult(intent, 100)
+
         }
 
         saveButton.setOnClickListener {
@@ -117,7 +97,7 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener, 
                     viewModel.insertUserInfo(user)
                 } else {
                     val user = UserEntity(
-                            nameInput.getTag(nameInput.id).toString().toInt(),
+                            nameInput.getTag(nameInput.id).toString().toInt(), // ID of textview into recyclerview(for updating)
                             name,
                             phone,
                             location
@@ -132,7 +112,6 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.RowClickListener, 
         }
 
     }
-
 
     override fun onMapPathClickListener(latlng: String) {
         val intent = Intent(this, MapsActivity2::class.java)
